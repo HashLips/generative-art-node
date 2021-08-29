@@ -1,18 +1,29 @@
 const fs = require("fs");
 const myArgs = process.argv.slice(2);
 const { createCanvas, loadImage } = require("canvas");
-const { layers, width, height } = require("./input/config.js");
+const { layers, width, height } = require("./src/config.js");
 const console = require("console");
+
 const canvas = createCanvas(width, height);
 const ctx = canvas.getContext("2d");
 const edition = myArgs.length > 0 ? Number(myArgs[0]) : 1;
-var metadata = [];
-var attributes = [];
-var hash = [];
-var decodedHash = [];
+let metadata = [];
+let attributes = [];
+let hash = [];
+let decodedHash = [];
+
+const buildDir = __dirname + '/build';
+const metDataFile = '_metadata.json';
+
+const buildSetup = () => {
+  if (fs.existsSync(buildDir)) {
+    fs.rmdirSync(buildDir, { recursive: true });
+  }
+  fs.mkdirSync(buildDir);
+}
 
 const saveLayer = (_canvas, _edition) => {
-  fs.writeFileSync(`./output/${_edition}.png`, _canvas.toBuffer("image/png"));
+  fs.writeFileSync(`${buildDir}/${_edition}.png`, _canvas.toBuffer("image/png"));
 };
 
 const addMetadata = (_edition) => {
@@ -58,15 +69,29 @@ const drawLayer = async (_layer, _edition) => {
   saveLayer(canvas, _edition);
 };
 
-for (let i = 1; i <= edition; i++) {
-  layers.forEach((layer) => {
-    drawLayer(layer, i);
-  });
-  addMetadata(i);
-  console.log("Creating edition " + i);
+const createFiles = () => {
+  for (let i = 1; i <= edition; i++) {
+    layers.forEach((layer) => {
+      drawLayer(layer, i);
+    });
+    addMetadata(i);
+    console.log("Creating edition " + i);
+  }
 }
 
-fs.readFile("./output/_metadata.json", (err, data) => {
-  if (err) throw err;
-  fs.writeFileSync("./output/_metadata.json", JSON.stringify(metadata));
-});
+const createMetaData = () => {
+  fs.stat(`${buildDir}/${metDataFile}`, (err, stat) => {
+    if(err == null || err.code === 'ENOENT') {
+      fs.writeFileSync(`${buildDir}/${metDataFile}`, JSON.stringify(metadata));
+    } else {
+        console.log('Oh no, error: ', err.code);
+    }
+  });
+}
+
+(() => {
+  buildSetup();
+  createFiles();
+  createMetaData();
+})();
+
