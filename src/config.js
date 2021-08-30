@@ -20,6 +20,6 @@ const rarity = [
     { key: "_sr", val: "super rare" },
 ];
 
-const defaultEditions = 5;
+const defaultEdition = 5;
 
-module.exports = { layersOrder, format, rarity, defaultEditions };
+module.exports = { layersOrder, format, rarity, defaultEdition };

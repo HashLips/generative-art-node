@@ -8,7 +8,7 @@ const ctx = canvas.getContext("2d");
 
 const buildDir = `${process.env.PWD}/build`;
 const metDataFile = '_metadata.json';
-const layersDir = `${__dirname}/layers`;
+const layersDir = `${process.env.PWD}/layers`;
 
 let metadata = [];
 let attributes = [];
@@ -60,14 +60,14 @@ const layersSetup = layersOrder => {
   }));
 
   return layers;
-}
+};
 
 const buildSetup = () => {
   if (fs.existsSync(buildDir)) {
     fs.rmdirSync(buildDir, { recursive: true });
   }
   fs.mkdirSync(buildDir);
-}
+};
 
 const saveLayer = (_canvas, _edition) => {
   fs.writeFileSync(`${buildDir}/${_edition}.png`, _canvas.toBuffer("image/png"));
@@ -127,7 +127,7 @@ const createFiles = edition => {
     addMetadata(i);
     console.log("Creating edition " + i);
   }
-}
+};
 
 const createMetaData = () => {
   fs.stat(`${buildDir}/${metDataFile}`, (err) => {
@@ -137,6 +137,6 @@ const createMetaData = () => {
         console.log('Oh no, error: ', err.code);
     }
   });
-}
+};
 
 module.exports = { buildSetup, createFiles, createMetaData };
