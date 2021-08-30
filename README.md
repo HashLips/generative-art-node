@@ -6,9 +6,8 @@ Create generative art by using the canvas api and node js
 
 ## Installation
 
-Run the following command to install dependencies:
-
 ```
+git clone https://github.com/HashLips/generative-art-node
 npm i
 ```
 
