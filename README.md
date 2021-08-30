@@ -2,6 +2,8 @@
 
 Create generative art by using the canvas api and node js
 
+![](https://github.com/philcon93/generative-art-node/blob/master/src/preview.png)
+
 ## Installation
 
 Run the following command to install dependencies:
@@ -12,9 +14,9 @@ npm i
 
 ## Usage
 
-Create your different layers as folders in the 'layers' directory, and add all the layer assets in these directories. And then append '_r' and '_sr' to the layer file names to make that layer file rare or super rare respectively. 
+Create your different layers as folders in the 'layers' directory, and add all the layer assets in these directories. Optionally, append '_r' and '_sr' to the layer file names to make those layer files rare or super rare respectively. 
 
-*Example:* If you had an ball layer you would create a ball directory, and then a file might be called
+*Example:* If you had an ball layer you would create a ball directory, and then a file might be called:
 
 - `red_eye_ball_sr.png`
 - `red_eye_ball_r.png`
@@ -39,16 +41,8 @@ const layersOrder = [
 
 Then optionally, update your `format` size, ie the outputted image size, and the defaultEdition, which is the amount of variation outputted.
 
-When your are all require, run the following command and your outputted art will be in the `build` directory:
+When your are all ready, run the following command and your outputted art will be in the `build` directory:
 
 ```
 npm run build
 ```
-
-## Deployment
-
-## Changelog
-
-## Contributing
-
-
