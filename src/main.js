@@ -6,6 +6,10 @@ const { layersOrder, format, rarity } = require("./config.js");
 const canvas = createCanvas(format.width, format.height);
 const ctx = canvas.getContext("2d");
 
+if (!process.env.PWD) {
+  process.env.PWD = process.cwd();
+}
+
 const buildDir = `${process.env.PWD}/build`;
 const metDataFile = '_metadata.json';
 const layersDir = `${process.env.PWD}/layers`;
