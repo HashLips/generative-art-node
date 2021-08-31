@@ -8,7 +8,8 @@ Create generative art by using the canvas api and node js
 
 ```
 git clone https://github.com/HashLips/generative-art-node
-npm i
+
+yarn add all
 ```
 
 ## Usage
@@ -44,5 +45,5 @@ When your are all ready, run the following command and your outputted art will b
 
 ```
 npm run build
+
 ```
-=======
