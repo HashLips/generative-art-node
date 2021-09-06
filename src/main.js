@@ -107,8 +107,9 @@ const addAttributes = (_element, _layer) => {
 };
 
 const drawLayer = async (_layer, _edition) => {
+  const rand = Math.random();
   let element =
-    _layer.elements[Math.floor(Math.random() * _layer.number)] ? _layer.elements[Math.floor(Math.random() * _layer.number)] : null;
+    _layer.elements[Math.floor(rand * _layer.number)] ? _layer.elements[Math.floor(rand * _layer.number)] : null;
   if (element) {
     addAttributes(element, _layer);
     const image = await loadImage(`${_layer.location}${element.fileName}`);
