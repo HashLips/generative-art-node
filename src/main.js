@@ -54,13 +54,14 @@ const getElements = path => {
 };
 
 const layersSetup = layersOrder => {
-  const layers = layersOrder.map((layer, index) => ({
+  const layers = layersOrder.map((layerObj, index) => ({
     id: index,
-    name: layer,
-    location: `${layersDir}/${layer}/`,
-    elements: getElements(`${layersDir}/${layer}/`),
+    name: layerObj.name,
+    location: `${layersDir}/${layerObj.name}/`,
+    elements: getElements(`${layersDir}/${layerObj.name}/`),
     position: { x: 0, y: 0 },
     size: { width: format.width, height: format.height },
+    number: layerObj.number
   }));
 
   return layers;
@@ -107,18 +108,20 @@ const addAttributes = (_element, _layer) => {
 
 const drawLayer = async (_layer, _edition) => {
   let element =
-    _layer.elements[Math.floor(Math.random() * _layer.elements.length)];
-  addAttributes(element, _layer);
-  const image = await loadImage(`${_layer.location}${element.fileName}`);
+    _layer.elements[Math.floor(Math.random() * _layer.number)] ? _layer.elements[Math.floor(Math.random() * _layer.number)] : null;
+  if (element) {
+    addAttributes(element, _layer);
+    const image = await loadImage(`${_layer.location}${element.fileName}`);
 
-  ctx.drawImage(
-    image,
-    _layer.position.x,
-    _layer.position.y,
-    _layer.size.width,
-    _layer.size.height
-  );
-  saveLayer(canvas, _edition);
+    ctx.drawImage(
+      image,
+      _layer.position.x,
+      _layer.position.y,
+      _layer.size.width,
+      _layer.size.height
+    );
+    saveLayer(canvas, _edition);
+  }
 };
 
 const createFiles = edition => {
