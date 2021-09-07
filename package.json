@@ -4,12 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Daniel Eugene Botha",
   "license": "ISC",
   "dependencies": {
+    "all": "^0.0.0",
     "canvas": "^2.8.0"
   }
 }
