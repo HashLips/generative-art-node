@@ -30,18 +30,21 @@ Once you have all your layers, go into `src/config.js` and update the `layersOrd
 
 ```
 const layersOrder = [
-    'background',
-    'head',
-    'mouth',
-    'eyes',
-    'eyewear',
-    'headwear',
+    { name: 'background', number: 1 },
+    { name: 'ball', number: 2 },
+    { name: 'eye color', number: 12 },
+    { name: 'iris', number: 3 },
+    { name: 'shine', number: 1 },
+    { name: 'bottom lid', number: 3 },
+    { name: 'top lid', number: 3 },
 ];
 ```
 
+The `name` of each layer object represents the name of the folder (in `/layers/`) that the images reside in. The `number` of each layer object represents the total number of image files you want to select from (possibly including blanks.) For instance, if you have three images in a layer folder and want to pick one of those each time, the `number` should be `3`. If you have a single image in a layer that you want to increase the rarity of to 1 in 100, the `number` for that layer should be `100`. In this case, 99 times out of 100, you will get a completely transparent layer.
+
 Then optionally, update your `format` size, ie the outputted image size, and the defaultEdition, which is the amount of variation outputted.
 
-When your are all ready, run the following command and your outputted art will be in the `build` directory:
+When you are all ready, run the following command and your outputted art will be in the `build` directory:
 
 ```
 npm run build
