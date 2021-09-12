@@ -15,7 +15,7 @@ Create generative art by using the canvas api and node js
 
 ## Installation
 
-```
+```sh
 git clone https://github.com/HashLips/generative-art-node
 
 yarn add all
@@ -37,7 +37,7 @@ Once you have all your layers, go into `src/config.js` and update the `layersOrd
 
 *Example:* If you were creating a portrait design, you might have a background, then a head, a mouth, eyes, eyewear, and then headwear, so your `layersOrder` would look something like this:
 
-```
+```js
 const layersOrder = [
     { name: 'background', number: 1 },
     { name: 'ball', number: 2 },
@@ -55,7 +55,6 @@ Then optionally, update your `format` size, ie the outputted image size, and the
 
 When you are all ready, run the following command and your outputted art will be in the `build` directory:
 
-```
+```sh
 npm run build
-
 ```
