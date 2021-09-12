@@ -125,12 +125,12 @@ const drawLayer = async (_layer, _edition) => {
   }
 };
 
-const createFiles = edition => {
+const createFiles = async edition => {
   const layers = layersSetup(layersOrder);
 
   for (let i = 1; i <= edition; i++) {
-    layers.forEach((layer) => {
-      drawLayer(layer, i);
+    await layers.forEach( async(layer) => {
+      await drawLayer(layer, i);
     });
     addMetadata(i);
     console.log("Creating edition " + i);
