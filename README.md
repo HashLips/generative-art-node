@@ -2,6 +2,9 @@
 
 All the code in these repos was created and explained by HashLips on the main YouTube channel.
 
+Important: There is a new repo for this code.
+[https://github.com/HashLips/hashlips_art_engine](https://github.com/HashLips/hashlips_art_engine)
+
 To find out more please visit:
 
 [HashLips YouTube](https://www.youtube.com/channel/UC1LV4_VQGBJHTJjEWUmy8nA)
