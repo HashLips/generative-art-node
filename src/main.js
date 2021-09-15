@@ -18,6 +18,8 @@ let metadata = [];
 let attributes = [];
 let hash = [];
 let decodedHash = [];
+const Exists = new Map();
+
 
 const addRarity = _str => {
   let itemRarity;
@@ -128,13 +130,28 @@ const drawLayer = async (_layer, _edition) => {
 const createFiles = async edition => {
   const layers = layersSetup(layersOrder);
 
-  for (let i = 1; i <= edition; i++) {
-    await layers.forEach( async(layer) => {
-      await drawLayer(layer, i);
-    });
-    addMetadata(i);
-    console.log("Creating edition " + i);
-  }
+  let numDupes = 0;
+ for (let i = 1; i <= edition; i++) {
+   await layers.forEach(async (layer) => {
+     await drawLayer(layer, i);
+   });
+
+   let key = hash.toString();
+   if (Exists.has(key)) {
+     console.log(
+       `Duplicate creation for edition ${i}. Same as edition ${Exists.get(
+         key
+       )}`
+     );
+     numDupes++;
+     if (numDupes > edition) break; //prevents infinite loop if no more unique items can be created
+     i--;
+   } else {
+     Exists.set(key, i);
+     addMetadata(i);
+     console.log("Creating edition " + i);
+   }
+ }
 };
 
 const createMetaData = () => {
