@@ -93,6 +93,10 @@ const addMetadata = _edition => {
   attributes = [];
   hash = [];
   decodedHash = [];
+  fs.writeFileSync(
+    `${buildDir}/${_edition}.json`,
+    JSON.stringify(tempMetadata, null, 2)
+  );
 };
 
 const addAttributes = (_element, _layer) => {
