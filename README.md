@@ -1,19 +1,21 @@
-# Welcome to HashLips
-
-All the code in these repos was created and explained by HashLips on the main YouTube channel.
+# Welcome to HashLips 👄
 
 Important: There is a new repo for this code.
 [https://github.com/HashLips/hashlips_art_engine](https://github.com/HashLips/hashlips_art_engine)
 
+All the code in these repos was created and explained by HashLips on the main YouTube channel.
+
 To find out more please visit:
 
-[HashLips YouTube](https://www.youtube.com/channel/UC1LV4_VQGBJHTJjEWUmy8nA)
+[📺 YouTube](https://www.youtube.com/channel/UC1LV4_VQGBJHTJjEWUmy8nA)
 
-[HashLips Telegram](https://t.me/hashlipsnft)
+[👄 Discord](https://discord.com/invite/qh6MWhMJDN)
 
-[HashLips Twitter](https://twitter.com/hashlipsnft)
+[💬 Telegram](https://t.me/hashlipsnft)
 
-[HashLips Website](https://hashlips.online/HashLips)
+[🐦 Twitter](https://twitter.com/hashlipsnft)
+
+[ℹ️ Website](https://hashlips.online/HashLips)
 
 # generative-art-node
 
