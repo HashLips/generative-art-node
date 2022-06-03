@@ -17,6 +17,6 @@ const rarity = [
   { key: "_sr", val: "super rare" },
 ];
 
-const defaultEdition = 5;
+const defaultEdition = 10;
 
 module.exports = { layersOrder, format, rarity, defaultEdition };
