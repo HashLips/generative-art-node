@@ -11,12 +11,28 @@ const format = {
   height: 230,
 };
 
+// const baseLayers = [
+//   { layerName: "male", quantity: 5000 },
+//   { layerName: "female", quantity: 5000 },
+//   { layerName: "female_red", quantity: 5000 },
+// ];
+
+// rarity level start from 0 to -> 999.... mining 0 is the most rare
 const rarityWeight = [
   { rarityType: "super-rare", weight: 5 },
   { rarityType: "rare", weight: 25 },
   { rarityType: "common", weight: 70 },
 ];
 
-const defaultEdition = 10;
+const quantity = 100;
+const baseUri = "http://";
+const description = "This is a description";
 
-module.exports = { layersOrder, format, rarityWeight, defaultEdition };
+module.exports = {
+  layersOrder,
+  format,
+  rarityWeight,
+  quantity,
+  baseUri,
+  description,
+};

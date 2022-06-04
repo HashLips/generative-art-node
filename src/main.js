@@ -4,8 +4,10 @@ const console = require("console");
 const {
   layersOrder,
   format,
-  defaultEdition,
+  quantity,
   rarityWeight,
+  baseUri,
+  description,
 } = require("./config.js");
 
 const canvas = createCanvas(format.width, format.height);
@@ -35,9 +37,9 @@ const getElements = (path, rarity) => {
   return fs
     .readdirSync(path)
     .filter((item) => !/(^|\/)\.[^\/\.]/g.test(item))
-    .map((e) => {
+    .map((e, index) => {
       return {
-        // id: index + 1,
+        id: index + 1,
         name: cleanName(e),
         path: `${path}/${e}`, //fileName: i,
         rarity,
@@ -56,7 +58,6 @@ const layersSetup = (layersOrder) => {
     ),
     position: { x: 0, y: 0 },
     size: { width: format.width, height: format.height },
-    number: layerObj.number,
   }));
 
   return layers;
@@ -81,9 +82,12 @@ const saveLayer = (_canvas, _edition) => {
 const addMetadata = (_edition) => {
   let dateTime = Date.now();
   let tempMetadata = {
-    hash: hash.join(""),
+    dna: hash.join(""),
     decodedHash: decodedHash,
     edition: _edition,
+    image: `${baseUri}/${_edition}`,
+    name: `#${_edition}`,
+    description: description,
     date: dateTime,
     attributes: attributes,
   };
@@ -93,9 +97,9 @@ const addMetadata = (_edition) => {
   decodedHash = [];
 };
 
-const addAttributes = (_element, _layer, _id) => {
+const addAttributes = (_element, _layer, _edition) => {
   let tempAttr = {
-    id: _id,
+    id: _edition,
     layer: _layer.name,
     name: _element.name,
     rarity: _element.rarity,
@@ -108,9 +112,10 @@ const addAttributes = (_element, _layer, _id) => {
 
 function getRarity() {
   let index = 0;
-  const weight = Math.random();
+  const weight = 100 * Math.random();
   for (let i = 0; i < rarityWeight.length; ++i) {
-    if (rarityWeight[i].weight <= weight) {
+    // console.log(rarityWeight[i].weight + " " + weight);
+    if (rarityWeight[i].weight >= weight) {
       index = i;
       break;
     }
@@ -120,26 +125,29 @@ function getRarity() {
 
 const drawLayer = async (_layer, _edition) => {
   //here
+  const rarityIndex = getRarity();
+  // console.log("RARITY INDEX " + rarityIndex);
+  const _rarityCategory = _layer.elements[rarityIndex];
+  //select file random Index
   const rand = Math.random();
-  let element = _layer.elements[Math.floor(rand * _layer.number)]
-    ? _layer.elements[Math.floor(rand * _layer.number)]
-    : null;
-  if (element) {
-    const rarityIndex = getRarity();
-    console.log("RARITY INDEX " + rarityIndex);
-    const _element = _layer.elements[rarityIndex];
-    addAttributes(_element, _layer, _edition);
-    const image = await loadImage(`${_element.path}/${element.fileName}`); //location will be removed
+  const fileRandIndex = Math.floor(rand * _rarityCategory.length);
+  const _file = _rarityCategory[fileRandIndex];
 
-    ctx.drawImage(
-      image,
-      _layer.position.x,
-      _layer.position.y,
-      _layer.size.width,
-      _layer.size.height
-    );
-    saveLayer(canvas, _edition);
-  }
+  // console.log(`Selected Layer Element of rarity ${rarityIndex}`, _file);
+
+  //Im here
+  addAttributes(_file, _layer, _edition); //
+
+  const image = await loadImage(_file.path); //location will be removed
+
+  ctx.drawImage(
+    image,
+    _layer.position.x,
+    _layer.position.y,
+    _layer.size.width,
+    _layer.size.height
+  );
+  saveLayer(canvas, _edition);
 };
 
 //Index.js call: Second
@@ -148,12 +156,13 @@ const createFiles = async () => {
   const layers = layersSetup(layersOrder);
 
   let numDupes = 0;
-  for (let i = 1; i <= defaultEdition; i++) {
+  for (let i = 1; i <= quantity; i++) {
     await layers.forEach(async (layer) => {
       await drawLayer(layer, i);
     });
 
     let key = hash.toString();
+
     if (Exists.has(key)) {
       console.log(
         `Duplicate creation for edition ${i}. Same as edition ${Exists.get(
@@ -161,7 +170,7 @@ const createFiles = async () => {
         )}`
       );
       numDupes++;
-      if (numDupes > defaultEdition) break; //prevents infinite loop if no more unique items can be created
+      if (numDupes > quantity) break; //prevents infinite loop if no more unique items can be created
       i--;
     } else {
       Exists.set(key, i);
