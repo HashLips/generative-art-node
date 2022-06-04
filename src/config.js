@@ -11,12 +11,12 @@ const format = {
   height: 230,
 };
 
-const rarity = [
-  { key: "", val: "original" },
-  { key: "_r", val: "rare" },
-  { key: "_sr", val: "super rare" },
+const rarityWeight = [
+  { rarityType: "super-rare", weight: 5 },
+  { rarityType: "rare", weight: 25 },
+  { rarityType: "common", weight: 70 },
 ];
 
 const defaultEdition = 10;
 
-module.exports = { layersOrder, format, rarity, defaultEdition };
+module.exports = { layersOrder, format, rarityWeight, defaultEdition };
