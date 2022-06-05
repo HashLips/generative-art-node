@@ -27,7 +27,6 @@ const layersDir = `${process.env.PWD}/layers`;
 let metadata = [];
 let attributes = [];
 let hash = [];
-let decodedHash = [];
 const Exists = new Map();
 //
 
@@ -111,35 +110,40 @@ const saveLayer = (_canvas, _edition) => {
   );
 };
 
-const addMetadata = (_race, _edition) => {
+const addMetadata = (_edition) => {
   let dateTime = Date.now();
   let tempMetadata = {
     dna: hash.join(""),
-    decodedHash: decodedHash,
     edition: _edition,
     image: `${baseUri}/${_edition}.${fileType}`,
     name: `${nft_project_name} #${_edition}`,
     description: description,
-    race: _race,
     attributes: attributes,
     date: dateTime,
   };
   metadata.push(tempMetadata);
   attributes = [];
   hash = [];
-  decodedHash = [];
 };
 
 const addAttributes = (trait_type, _value) => {
-  let tempAttr = {
-    trait_type: trait_type.name,
-    value: _value.name,
-    rarity: _value.rarity,
-  };
+  let tempAttr = {};
+  if (_value.rarity != undefined) {
+    tempAttr = {
+      trait_type: trait_type.name,
+      value: _value.name,
+      rarity: _value.rarity,
+    };
+  } else {
+    tempAttr = {
+      trait_type: trait_type.name,
+      value: _value.name,
+    };
+  }
+
   attributes.push(tempAttr);
   hash.push(trait_type.id);
-  hash.push(_value.id);
-  decodedHash.push({ [trait_type.id]: _value.id });
+  if (_value.id != undefined) hash.push(_value.id);
 };
 
 function getRarity() {
@@ -185,12 +189,13 @@ const drawLayer = async (_layer, _edition) => {
 //Index.js call: Second
 //Generator
 const createFiles = async () => {
-  races.forEach(async (_race) => {
+  races.forEach(async (_race, _raceIndex) => {
     const _layers = layersSetup(_race);
     const _quantity = _race.quantity;
     let numDupes = 0;
 
     for (let i = 1; i <= _quantity; i++) {
+      addAttributes({ name: "race", id: _raceIndex }, { name: _race.name });
       await _layers.forEach(async (layer) => {
         await drawLayer(layer, i);
       });
@@ -208,7 +213,7 @@ const createFiles = async () => {
         i--;
       } else {
         Exists.set(key, i);
-        addMetadata(_race.name, i);
+        addMetadata(i);
         saveSingleNftMetadata(i);
         console.log("Creating edition " + i);
       }
