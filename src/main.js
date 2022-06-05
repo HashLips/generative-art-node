@@ -2,12 +2,14 @@ const fs = require("fs");
 const { createCanvas, loadImage } = require("canvas");
 const console = require("console");
 const {
-  layersOrder,
-  format,
-  quantity,
-  rarityWeight,
-  baseUri,
+  nft_project_name,
   description,
+  baseUri,
+  quantity,
+  format,
+  layersOrder,
+  races,
+  rarityWeight,
 } = require("./config.js");
 
 const canvas = createCanvas(format.width, format.height);
@@ -86,7 +88,7 @@ const addMetadata = (_edition) => {
     decodedHash: decodedHash,
     edition: _edition,
     image: `${baseUri}/${_edition}`,
-    name: `#${_edition}`,
+    name: `${nft_project_name} #${_edition}`,
     description: description,
     date: dateTime,
     attributes: attributes,
@@ -153,6 +155,7 @@ const drawLayer = async (_layer, _edition) => {
 //Index.js call: Second
 //Generator
 const createFiles = async () => {
+  // for(let i = 0; i< )
   const layers = layersSetup(layersOrder);
 
   let numDupes = 0;
