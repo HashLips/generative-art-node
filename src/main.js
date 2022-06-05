@@ -1,5 +1,5 @@
 const basePath = process.cwd();
-// const sha1 = require(`${basePath}/node_modules/sha1`);
+const sha1 = require(`sha1`);
 const fs = require("fs");
 const { createCanvas, loadImage } = require("canvas");
 const console = require("console");
@@ -11,6 +11,7 @@ const {
   format,
   fileType,
   races,
+  addRaceAsAttr,
   rarityWeight,
 } = require("./config.js");
 
@@ -115,7 +116,7 @@ const saveLayer = (_canvas, _edition) => {
 const addMetadata = (_edition) => {
   let dateTime = Date.now();
   let tempMetadata = {
-    dna: hash.join(""),
+    dna: sha1(hash.join("")),
     edition: _edition,
     image: `${baseUri}/${_edition}.${fileType}`,
     name: `${nft_project_name} #${_edition}`,
@@ -197,7 +198,10 @@ const createFiles = async () => {
     let numDupes = 0;
 
     for (let i = 1; i <= _quantity; i++) {
-      addAttributes({ name: "race", id: _raceIndex }, { name: _race.name });
+      //Add race to attributes if race.name is not undefined
+      if (_race.name != undefined)
+        addAttributes({ name: "race", id: _raceIndex }, { name: _race.name });
+      //generate layers
       await _layers.forEach(async (layer) => {
         await drawLayer(layer, i);
       });
