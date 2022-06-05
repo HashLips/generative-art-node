@@ -1,15 +1,16 @@
 const nft_project_name = "MOMO";
 const description = "This is a description";
-const baseUri = "http://";
+const baseUri = "ipfs://";
 const mainQuantity = 0;
 const format = {
   width: 230,
   height: 230,
 };
+const fileType = "png";
 const races = [
   {
     name: "momo",
-    quantity: 10, //if mainQuantity is greater than 0 this "quantity" becomes a weight
+    quantity: 5, //if mainQuantity is greater than 0 this "quantity" becomes a weight
     layersOrder: [
       { name: "background" },
       { name: "body" },
@@ -31,6 +32,7 @@ module.exports = {
   baseUri,
   mainQuantity,
   format,
+  fileType,
   races,
   rarityWeight,
 };

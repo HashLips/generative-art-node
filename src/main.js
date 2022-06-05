@@ -7,6 +7,7 @@ const {
   baseUri,
   mainQuantity,
   format,
+  fileType,
   races,
   rarityWeight,
 } = require("./config.js");
@@ -17,8 +18,9 @@ const ctx = canvas.getContext("2d");
 if (!process.env.PWD) {
   process.env.PWD = process.cwd();
 }
-
 const buildDir = `${process.env.PWD}/build`;
+const buildDir_json = `${buildDir}/json`;
+const buildDir_png = `${buildDir}/png`;
 const metDataFile = "_metadata.json";
 const layersDir = `${process.env.PWD}/layers`;
 
@@ -27,14 +29,31 @@ let attributes = [];
 let hash = [];
 let decodedHash = [];
 const Exists = new Map();
+//
+
+function saveSingleNftMetadata(_edition) {
+  const _singleMetadata = metadata.find((m) => m.edition == _edition);
+  fs.writeFileSync(
+    `${buildDir_json}/${_edition}.json`,
+    JSON.stringify(_singleMetadata)
+  );
+}
+// function createDna(_layers, _race, _raceIndex) {
+//   let randDna = [{ layer }];
+//   _layers.forEach((layer) => {
+//     const rand = Math.random();
+//     const _elementIndex = Math.floor(rand * rarityFolder.length);
+//     randDna.push({ elementIndex: _elementIndex, rarity: getRarity() });
+//   });
+//   return;
+// }
 
 const cleanName = (_str) => {
   let name = _str.slice(0, -4);
-
   return name;
 };
 
-const getElements = (path, rarity) => {
+const getRarityElements = (path, rarity) => {
   return fs
     .readdirSync(path)
     .filter((item) => !/(^|\/)\.[^\/\.]/g.test(item))
@@ -42,7 +61,7 @@ const getElements = (path, rarity) => {
       return {
         id: index + 1,
         name: cleanName(e),
-        path: `${path}/${e}`, //fileName: i,
+        path: `${path}/${e}`,
         rarity,
       };
     });
@@ -53,10 +72,8 @@ const layersSetup = (race) => {
   const layers = layersOrder.map((layerObj, index) => ({
     id: index,
     name: layerObj.name,
-    // location: `${layersDir}/${layerObj.name}/`, //remove
-    // elements: getElements(`${layersDir}/${layerObj.name}/`),
-    elements: rarityWeight.map((e) =>
-      getElements(
+    rarityFolder: rarityWeight.map((e) =>
+      getRarityElements(
         `${layersDir}/${race.name}/${layerObj.name}/${e.rarityType}`,
         e.rarityType
       )
@@ -75,11 +92,21 @@ const buildSetup = () => {
     fs.rmdirSync(buildDir, { recursive: true });
   }
   fs.mkdirSync(buildDir);
+  //
+  if (fs.existsSync(buildDir_png)) {
+    fs.rmdirSync(buildDir_png, { recursive: true });
+  }
+  fs.mkdirSync(buildDir_png);
+  //
+  if (fs.existsSync(buildDir_json)) {
+    fs.rmdirSync(buildDir_json, { recursive: true });
+  }
+  fs.mkdirSync(buildDir_json);
 };
 
 const saveLayer = (_canvas, _edition) => {
   fs.writeFileSync(
-    `${buildDir}/${_edition}.png`,
+    `${buildDir_png}/${_edition}.png`,
     _canvas.toBuffer("image/png")
   );
 };
@@ -90,7 +117,7 @@ const addMetadata = (_race, _edition) => {
     dna: hash.join(""),
     decodedHash: decodedHash,
     edition: _edition,
-    image: `${baseUri}/${_edition}`,
+    image: `${baseUri}/${_edition}.${fileType}`,
     name: `${nft_project_name} #${_edition}`,
     description: description,
     race: _race,
@@ -103,9 +130,8 @@ const addMetadata = (_race, _edition) => {
   decodedHash = [];
 };
 
-const addAttributes = (_element, _layer, _edition) => {
+const addAttributes = (_element, _layer) => {
   let tempAttr = {
-    id: _edition,
     layer: _layer.name,
     name: _element.name,
     rarity: _element.rarity,
@@ -133,16 +159,16 @@ const drawLayer = async (_layer, _edition) => {
   //here
   const rarityIndex = getRarity();
   // console.log("RARITY INDEX " + rarityIndex);
-  const _rarityCategory = _layer.elements[rarityIndex];
+  const rarityFolder = _layer.rarityFolder[rarityIndex];
   //select file random Index
   const rand = Math.random();
-  const fileRandIndex = Math.floor(rand * _rarityCategory.length);
-  const _file = _rarityCategory[fileRandIndex];
+  const fileRandIndex = Math.floor(rand * rarityFolder.length);
+  const _file = rarityFolder[fileRandIndex];
 
   // console.log(`Selected Layer Element of rarity ${rarityIndex}`, _file);
 
   //Im here
-  addAttributes(_file, _layer, _edition); //
+  addAttributes(_file, _layer); //
 
   const image = await loadImage(_file.path); //location will be removed
 
@@ -159,12 +185,11 @@ const drawLayer = async (_layer, _edition) => {
 //Index.js call: Second
 //Generator
 const createFiles = async () => {
-  for (let i = 0; i < races.length; i++) {
-    const _race = races[i];
-
+  races.forEach(async (_race) => {
     const _layers = layersSetup(_race);
     const _quantity = _race.quantity;
     let numDupes = 0;
+
     for (let i = 1; i <= _quantity; i++) {
       await _layers.forEach(async (layer) => {
         await drawLayer(layer, i);
@@ -184,10 +209,11 @@ const createFiles = async () => {
       } else {
         Exists.set(key, i);
         addMetadata(_race.name, i);
+        saveSingleNftMetadata(i);
         console.log("Creating edition " + i);
       }
     }
-  }
+  });
 };
 
 //Index.js call: Third
