@@ -1,3 +1,5 @@
+const basePath = process.cwd();
+// const sha1 = require(`${basePath}/node_modules/sha1`);
 const fs = require("fs");
 const { createCanvas, loadImage } = require("canvas");
 const console = require("console");
@@ -16,7 +18,7 @@ const canvas = createCanvas(format.width, format.height);
 const ctx = canvas.getContext("2d");
 
 if (!process.env.PWD) {
-  process.env.PWD = process.cwd();
+  process.env.PWD = basePath;
 }
 const buildDir = `${process.env.PWD}/build`;
 const buildDir_json = `${buildDir}/json`;
