@@ -5,9 +5,8 @@ const {
   nft_project_name,
   description,
   baseUri,
-  quantity,
+  mainQuantity,
   format,
-  layersOrder,
   races,
   rarityWeight,
 } = require("./config.js");
@@ -49,14 +48,18 @@ const getElements = (path, rarity) => {
     });
 };
 
-const layersSetup = (layersOrder) => {
+const layersSetup = (race) => {
+  const layersOrder = race.layersOrder;
   const layers = layersOrder.map((layerObj, index) => ({
     id: index,
     name: layerObj.name,
     // location: `${layersDir}/${layerObj.name}/`, //remove
     // elements: getElements(`${layersDir}/${layerObj.name}/`),
     elements: rarityWeight.map((e) =>
-      getElements(`${layersDir}/${layerObj.name}/${e.rarityType}`, e.rarityType)
+      getElements(
+        `${layersDir}/${race.name}/${layerObj.name}/${e.rarityType}`,
+        e.rarityType
+      )
     ),
     position: { x: 0, y: 0 },
     size: { width: format.width, height: format.height },
@@ -81,7 +84,7 @@ const saveLayer = (_canvas, _edition) => {
   );
 };
 
-const addMetadata = (_edition) => {
+const addMetadata = (_race, _edition) => {
   let dateTime = Date.now();
   let tempMetadata = {
     dna: hash.join(""),
@@ -90,8 +93,9 @@ const addMetadata = (_edition) => {
     image: `${baseUri}/${_edition}`,
     name: `${nft_project_name} #${_edition}`,
     description: description,
-    date: dateTime,
+    race: _race,
     attributes: attributes,
+    date: dateTime,
   };
   metadata.push(tempMetadata);
   attributes = [];
@@ -155,30 +159,33 @@ const drawLayer = async (_layer, _edition) => {
 //Index.js call: Second
 //Generator
 const createFiles = async () => {
-  // for(let i = 0; i< )
-  const layers = layersSetup(layersOrder);
+  for (let i = 0; i < races.length; i++) {
+    const _race = races[i];
 
-  let numDupes = 0;
-  for (let i = 1; i <= quantity; i++) {
-    await layers.forEach(async (layer) => {
-      await drawLayer(layer, i);
-    });
+    const _layers = layersSetup(_race);
+    const _quantity = _race.quantity;
+    let numDupes = 0;
+    for (let i = 1; i <= _quantity; i++) {
+      await _layers.forEach(async (layer) => {
+        await drawLayer(layer, i);
+      });
 
-    let key = hash.toString();
+      let key = hash.toString();
 
-    if (Exists.has(key)) {
-      console.log(
-        `Duplicate creation for edition ${i}. Same as edition ${Exists.get(
-          key
-        )}`
-      );
-      numDupes++;
-      if (numDupes > quantity) break; //prevents infinite loop if no more unique items can be created
-      i--;
-    } else {
-      Exists.set(key, i);
-      addMetadata(i);
-      console.log("Creating edition " + i);
+      if (Exists.has(key)) {
+        console.log(
+          `Duplicate creation for edition ${i}. Same as edition ${Exists.get(
+            key
+          )}`
+        );
+        numDupes++;
+        if (numDupes > _quantity) break; //prevents infinite loop if no more unique items can be created
+        i--;
+      } else {
+        Exists.set(key, i);
+        addMetadata(_race.name, i);
+        console.log("Creating edition " + i);
+      }
     }
   }
 };

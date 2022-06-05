@@ -1,24 +1,16 @@
 const nft_project_name = "MOMO";
 const description = "This is a description";
 const baseUri = "http://";
-const quantity = 10;
+const mainQuantity = 0;
 const format = {
   width: 230,
   height: 230,
 };
-
-const layersOrder = [
-  { name: "background" },
-  { name: "body" },
-  { name: "eyes" },
-  { name: "mouth" },
-  { name: "tattoo" },
-];
 const races = [
   {
     name: "momo",
-    quantity: 10,
-    layerOrder: [
+    quantity: 10, //if mainQuantity is greater than 0 this "quantity" becomes a weight
+    layersOrder: [
       { name: "background" },
       { name: "body" },
       { name: "eyes" },
@@ -33,20 +25,12 @@ const rarityWeight = [
   { rarityType: "rare", weight: 25 },
   { rarityType: "common", weight: 70 },
 ];
-
-// const rases = [
-//   { layerName: "male", quantity: 5000 },
-//   { layerName: "female", quantity: 5000 },
-//   { layerName: "female_red", quantity: 5000 },
-// ];
-
 module.exports = {
   nft_project_name,
   description,
   baseUri,
-  quantity,
+  mainQuantity,
   format,
-  layersOrder,
   races,
   rarityWeight,
 };
