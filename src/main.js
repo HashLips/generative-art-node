@@ -130,16 +130,16 @@ const addMetadata = (_race, _edition) => {
   decodedHash = [];
 };
 
-const addAttributes = (_element, _layer) => {
+const addAttributes = (trait_type, _value) => {
   let tempAttr = {
-    layer: _layer.name,
-    name: _element.name,
-    rarity: _element.rarity,
+    trait_type: trait_type.name,
+    value: _value.name,
+    rarity: _value.rarity,
   };
   attributes.push(tempAttr);
-  hash.push(_layer.id);
-  hash.push(_element.id);
-  decodedHash.push({ [_layer.id]: _element.id });
+  hash.push(trait_type.id);
+  hash.push(_value.id);
+  decodedHash.push({ [trait_type.id]: _value.id });
 };
 
 function getRarity() {
@@ -168,7 +168,7 @@ const drawLayer = async (_layer, _edition) => {
   // console.log(`Selected Layer Element of rarity ${rarityIndex}`, _file);
 
   //Im here
-  addAttributes(_file, _layer); //
+  addAttributes(_layer, _file); //
 
   const image = await loadImage(_file.path); //location will be removed
 
