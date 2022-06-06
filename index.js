@@ -1,7 +1,7 @@
-const { buildSetup, createFiles, createMetaData } = require("./src/main.js");
+const { buildSetup, generateFiles, createMetaData } = require("./src/main.js");
 
 (() => {
   buildSetup();
-  createFiles();
+  generateFiles();
   createMetaData();
 })();

@@ -11,7 +11,6 @@ const {
   format,
   fileType,
   races,
-  addRaceAsAttr,
   rarityWeight,
 } = require("./config.js");
 
@@ -40,15 +39,6 @@ function saveSingleNftMetadata(_edition) {
     JSON.stringify(_singleMetadata)
   );
 }
-// function createDna(_layers, _race, _raceIndex) {
-//   let randDna = [{ layer }];
-//   _layers.forEach((layer) => {
-//     const rand = Math.random();
-//     const _elementIndex = Math.floor(rand * rarityFolder.length);
-//     randDna.push({ elementIndex: _elementIndex, rarity: getRarity() });
-//   });
-//   return;
-// }
 
 const cleanName = (_str) => {
   let name = _str.slice(0, -4);
@@ -149,7 +139,7 @@ const addAttributes = (trait_type, _value) => {
   if (_value.id != undefined) hash.push(_value.id);
 };
 
-function getRarity() {
+function getRarityIndex() {
   let index = 0;
   const weight = 100 * Math.random();
   for (let i = 0; i < rarityWeight.length; ++i) {
@@ -161,10 +151,22 @@ function getRarity() {
   }
   return index;
 }
+function getRaceIndex() {
+  let index = 0;
+  const weight = 100 * Math.random();
+  for (let i = 0; i < races.length; ++i) {
+    // console.log(rarityWeight[i].weight + " " + weight);
+    if (races[i].quantity >= weight) {
+      index = i;
+      break;
+    }
+  }
+  return index;
+}
 
 const drawLayer = async (_layer, _edition) => {
   //here
-  const rarityIndex = getRarity();
+  const rarityIndex = getRarityIndex();
   // console.log("RARITY INDEX " + rarityIndex);
   const rarityFolder = _layer.rarityFolder[rarityIndex];
   //select file random Index
@@ -191,7 +193,16 @@ const drawLayer = async (_layer, _edition) => {
 
 //Index.js call: Second
 //Generator
-const createFiles = async () => {
+const generateFiles = () => {
+  generateFilesSpecificRaceQuantity();
+  return;
+  if (mainQuantity == undefined || mainQuantity == 0) {
+    generateFilesSpecificRaceQuantity();
+  } else if (mainQuantity > 0) {
+    generateFilesRandomRaceQuantity();
+  }
+};
+async function generateFilesSpecificRaceQuantity() {
   races.forEach(async (_race, _raceIndex) => {
     const _layers = layersSetup(_race);
     const _quantity = _race.quantity;
@@ -199,7 +210,7 @@ const createFiles = async () => {
 
     for (let i = 1; i <= _quantity; i++) {
       //Add race to attributes if race.name is not undefined
-      if (_race.name != undefined)
+      if (races.length > 1)
         addAttributes({ name: "race", id: _raceIndex }, { name: _race.name });
       //generate layers
       await _layers.forEach(async (layer) => {
@@ -225,7 +236,44 @@ const createFiles = async () => {
       }
     }
   });
-};
+}
+async function generateFilesRandomRaceQuantity() {
+  let numDupes = 0;
+  for (let i = 0; i < mainQuantity; ++i) {
+    //Get randomRace
+    const _raceIndex = getRaceIndex();
+    //Add race to attributes if race.name is not undefined
+    if (races.length > 1)
+      addAttributes(
+        { name: "race", id: _raceIndex },
+        { name: races[_raceIndex].name }
+      );
+    //generate layers
+    const _layers = layersSetup(races[_raceIndex]);
+    await _layers.forEach(async (layer) => {
+      await drawLayer(layer, i);
+    });
+
+    let key = hash.toString();
+
+    if (Exists.has(key)) {
+      console.log(
+        `Duplicate creation for edition ${i}. Same as edition ${Exists.get(
+          key
+        )}`
+      );
+      numDupes++;
+      if (numDupes > mainQuantity) break; //prevents infinite loop if no more unique items can be created
+      i--;
+    } else {
+      Exists.set(key, i);
+      const newEdition = i + 1;
+      addMetadata(newEdition);
+      saveSingleNftMetadata(newEdition);
+      console.log("Creating edition " + newEdition);
+    }
+  }
+}
 
 //Index.js call: Third
 //Creates _metadata.json file and parses a string into a json.
@@ -242,4 +290,4 @@ const createMetaData = () => {
   });
 };
 
-module.exports = { buildSetup, createFiles, createMetaData };
+module.exports = { buildSetup, generateFiles, createMetaData };

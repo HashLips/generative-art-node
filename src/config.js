@@ -1,14 +1,13 @@
 const nft_project_name = "MOMO";
 const description = "This is a description";
 const baseUri = "ipfs://";
-const mainQuantity = 0;
+const mainQuantity = 12;
 const format = {
   width: 460,
   height: 460,
 };
 const fileType = "png";
 
-const addRaceAsAttr = true;
 const races = [
   {
     name: "momo",
@@ -36,6 +35,5 @@ module.exports = {
   format,
   fileType,
   races,
-  addRaceAsAttr,
   rarityWeight,
 };
