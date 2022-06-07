@@ -98,7 +98,7 @@ const buildSetup = () => {
 
 const saveLayer = (_canvas, _edition) => {
   fs.writeFileSync(
-    `${buildDir_png}/${_edition}.png`,
+    `${buildDir_png}/${_edition + 1}.png`,
     _canvas.toBuffer("image/png")
   );
 };
@@ -140,27 +140,29 @@ const addAttributes = (trait_type, _value) => {
 };
 
 function getRarityIndex() {
-  let index = 0;
-  const weight = 100 * Math.random();
+  let index = rarityWeight.length - 1;
+  let weight = 100 * Math.random();
   for (let i = 0; i < rarityWeight.length; ++i) {
     // console.log(rarityWeight[i].weight + " " + weight);
     if (rarityWeight[i].weight >= weight) {
       index = i;
       break;
-    }
+    } else weight -= rarityWeight[i].weight;
   }
   return index;
 }
 function getRaceIndex() {
-  let index = 0;
-  const weight = 100 * Math.random();
+  let index = races.length - 1;
+  let weight = 100 * Math.random();
   for (let i = 0; i < races.length; ++i) {
     // console.log(rarityWeight[i].weight + " " + weight);
     if (races[i].quantity >= weight) {
       index = i;
       break;
-    }
+    } else weight -= races[i].quantity;
   }
+  console.log("selected race " + (index == 0 ? "mama " : "momo "));
+
   return index;
 }
 
@@ -176,7 +178,6 @@ const drawLayer = async (_layer, _edition) => {
 
   // console.log(`Selected Layer Element of rarity ${rarityIndex}`, _file);
 
-  //Im here
   addAttributes(_layer, _file); //
 
   const image = await loadImage(_file.path); //location will be removed
@@ -194,8 +195,6 @@ const drawLayer = async (_layer, _edition) => {
 //Index.js call: Second
 //Generator
 const generateFiles = () => {
-  generateFilesSpecificRaceQuantity();
-  return;
   if (mainQuantity == undefined || mainQuantity == 0) {
     generateFilesSpecificRaceQuantity();
   } else if (mainQuantity > 0) {
@@ -203,19 +202,23 @@ const generateFiles = () => {
   }
 };
 async function generateFilesSpecificRaceQuantity() {
-  races.forEach(async (_race, _raceIndex) => {
+  let mainIndex = 0;
+  for (let _raceIndex = 0; _raceIndex < races.length; ++_raceIndex) {
+    const _race = races[_raceIndex];
     const _layers = layersSetup(_race);
     const _quantity = _race.quantity;
     let numDupes = 0;
 
-    for (let i = 1; i <= _quantity; i++) {
+    for (let i = 0; i < _quantity; i++) {
       //Add race to attributes if race.name is not undefined
       if (races.length > 1)
-        addAttributes({ name: "race", id: _raceIndex }, { name: _race.name });
+        addAttributes({ name: "race", id: mainIndex }, { name: _race.name });
       //generate layers
-      await _layers.forEach(async (layer) => {
-        await drawLayer(layer, i);
-      });
+      // console.log("Start Drawing");
+      for (const _layer of _layers) {
+        await drawLayer(_layer, mainIndex);
+      }
+      // console.log("End Drawing");
 
       let key = hash.toString();
 
@@ -229,16 +232,18 @@ async function generateFilesSpecificRaceQuantity() {
         if (numDupes > _quantity) break; //prevents infinite loop if no more unique items can be created
         i--;
       } else {
-        Exists.set(key, i);
-        addMetadata(i);
-        saveSingleNftMetadata(i);
-        console.log("Creating edition " + i);
+        ++mainIndex;
+        Exists.set(key, mainIndex);
+        addMetadata(mainIndex);
+        saveSingleNftMetadata(mainIndex);
+        console.log("Creating edition " + mainIndex);
       }
     }
-  });
+  }
 }
 async function generateFilesRandomRaceQuantity() {
   let numDupes = 0;
+
   for (let i = 0; i < mainQuantity; ++i) {
     //Get randomRace
     const _raceIndex = getRaceIndex();

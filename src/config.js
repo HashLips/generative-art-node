@@ -1,7 +1,7 @@
 const nft_project_name = "MOMO";
 const description = "This is a description";
 const baseUri = "ipfs://";
-const mainQuantity = 12;
+const mainQuantity = 0;
 const format = {
   width: 460,
   height: 460,
@@ -9,6 +9,17 @@ const format = {
 const fileType = "png";
 
 const races = [
+  {
+    name: "mama",
+    quantity: 5, //if mainQuantity is greater than 0 this "quantity" becomes a weight
+    layersOrder: [
+      { name: "background" },
+      { name: "body" },
+      { name: "eyes" },
+      { name: "mouth" },
+      { name: "tattoo" },
+    ],
+  },
   {
     name: "momo",
     quantity: 5, //if mainQuantity is greater than 0 this "quantity" becomes a weight
