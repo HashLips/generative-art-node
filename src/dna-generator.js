@@ -40,8 +40,15 @@ function getRaceIndex() {
 }
 
 function genDNA(_raceIndex) {
+  // console.log(races[_raceIndex].layersOrder);
   const _layerOrder = races[_raceIndex].layersOrder;
   let attributes = [];
+
+  if (races.length > 1) {
+    attributes.push({ trait_type: "race", value: races[_raceIndex].name });
+    console.log("add race");
+  }
+
   for (let i = 0; i < _layerOrder.length; ++i) {
     const _rarityIndex = getRarity();
     const rand = Math.random();
@@ -118,21 +125,25 @@ function generateNFTs() {
 
   let count = 0;
   let duplicateFoundCount = 0;
-  for (const _race of races) {
-    console.log(_race.name);
+  for (let _raceIndex = 0; _raceIndex < races.length; ++_raceIndex) {
+    console.log(races[_raceIndex].name);
     for (let i = 0; i < mainQuantity; i++) {
-      console.log(i);
-      const _dna = genDNA(i);
+      const _dna = genDNA(_raceIndex);
 
       if (Exists.has(_dna.hash)) {
         console.log(
-          _race.name + " " + i + " " + _dna.hash + " WAS A DUPLICATE"
+          races[_raceIndex].name +
+            " " +
+            i +
+            " " +
+            _dna.hash +
+            " WAS A DUPLICATE"
         );
         --i;
         ++duplicateFoundCount;
       } //
       else {
-        console.log(_race.name, _dna);
+        console.log(races[_raceIndex].name, _dna);
         Exists.set(_dna.hash, i);
         ++count;
       }
