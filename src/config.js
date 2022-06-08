@@ -1,7 +1,7 @@
 const nft_project_name = "MOMO";
 const description = "This is a description";
 const baseUri = "ipfs://";
-const mainQuantity = 0;
+const mainQuantity = 3;
 const format = {
   width: 460,
   height: 460,

@@ -17,14 +17,11 @@ const {
 const canvas = createCanvas(format.width, format.height);
 const ctx = canvas.getContext("2d");
 
-if (!process.env.PWD) {
-  process.env.PWD = basePath;
-}
-const buildDir = `${process.env.PWD}/build`;
+const buildDir = `${basePath}/build`;
 const buildDir_json = `${buildDir}/json`;
 const buildDir_png = `${buildDir}/png`;
 const metDataFile = "_metadata.json";
-const layersDir = `${process.env.PWD}/layers`;
+const layersDir = `${basePath}/layers`;
 
 let metadata = [];
 let attributes = [];
@@ -191,7 +188,6 @@ const drawLayer = async (_layer, _edition) => {
   );
   saveLayer(canvas, _edition);
 };
-
 //Index.js call: Second
 //Generator
 const generateFiles = () => {
