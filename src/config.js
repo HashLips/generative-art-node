@@ -1,7 +1,8 @@
-const nft_project_name = "MOMO";
-const description = "This is a description";
+const author = "Anon";
+const projectName = "MOMO";
+const projectDescription = "This is a description";
 const baseUri = "ipfs://";
-const mainQuantity = 3;
+const mainQuantity = 50;
 const format = {
   width: 460,
   height: 460,
@@ -39,8 +40,9 @@ const rarityWeight = [
   { rarityType: "common", weight: 70 },
 ];
 module.exports = {
-  nft_project_name,
-  description,
+  author,
+  projectName,
+  projectDescription,
   baseUri,
   mainQuantity,
   format,

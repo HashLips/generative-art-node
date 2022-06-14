@@ -46,7 +46,7 @@ function genDNA(_raceIndex) {
 
   if (races.length > 1) {
     attributes.push({ trait_type: "race", value: races[_raceIndex].name });
-    console.log("add race");
+    // console.log("add race");
   }
 
   for (let i = 0; i < _layerOrder.length; ++i) {
@@ -56,15 +56,20 @@ function genDNA(_raceIndex) {
       rand *
         paths[_raceIndex].attributes[i].rarities[_rarityIndex].elements.length
     );
-    attributes.push(
+    const attrToAdd =
       paths[_raceIndex].attributes[i].rarities[_rarityIndex].elements[
         fileRandIndex
-      ]
-    );
+      ];
+    attributes.push({
+      trait_type: `${attrToAdd.name}`,
+      value: `${_layerOrder[i].name}`,
+      rarity: rarityWeight[_rarityIndex].rarityType,
+      path: `${attrToAdd.path}`,
+    });
   }
-  const _hash = sha1(attributes.join(""));
+  // console.log(attributes.map((e) => e.trait_type).join(""));
+  const _hash = sha1(attributes.map((e) => e.trait_type).join(""));
 
-  // schemas.push({ hash: _hash, attributes });
   return { hash: _hash, attributes };
 }
 
@@ -116,17 +121,31 @@ function setupPaths() {
     }
   }
 }
+const buildSetup = () => {
+  if (fs.existsSync(buildDir)) return;
+  fs.mkdirSync(buildDir);
+};
 //#endregion
+
+const createMetaData = () => {
+  fs.stat(`${buildDir}/${metDataFile}`, (err) => {
+    if (err == null || err.code === "ENOENT") {
+      fs.writeFileSync(`${metDataFile}`, JSON.stringify(schemas, null, 2));
+    } else {
+      console.log("Oh no, error: ", err.code);
+    }
+  });
+};
 
 function generateNFTs() {
   //
+  buildSetup();
   setupPaths();
   // console.log("Hey", paths[1].attributes[0].rarities[2].elements); //[0].attributes[0].rarities[2].elements
 
   let count = 0;
   let duplicateFoundCount = 0;
   for (let _raceIndex = 0; _raceIndex < races.length; ++_raceIndex) {
-    console.log(races[_raceIndex].name);
     for (let i = 0; i < mainQuantity; i++) {
       const _dna = genDNA(_raceIndex);
 
@@ -146,6 +165,7 @@ function generateNFTs() {
         console.log(races[_raceIndex].name, _dna);
         Exists.set(_dna.hash, i);
         ++count;
+        schemas.push({ hash: _dna.hash, attributes: _dna.attributes });
       }
       //Generate DNA
     }
@@ -154,6 +174,7 @@ function generateNFTs() {
   console.log(
     `NFT count: ${count}, duplicate found count: ${duplicateFoundCount}`
   );
+  createMetaData();
 }
 
 module.exports = { generateNFTs };
