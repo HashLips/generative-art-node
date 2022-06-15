@@ -1,5 +1,5 @@
 const { buildSetup, generateFiles, createMetaData } = require("./src/main.js");
-const { generateNFTs } = require("./src/dna-generator.js");
+const { generateDNAs } = require("./src/dna-generator.js");
 const { generateEditionsMetaFiles } = require("./src/meta-generator.js");
 
 (() => {
@@ -7,6 +7,6 @@ const { generateEditionsMetaFiles } = require("./src/meta-generator.js");
   // generateFiles();
   // createMetaData();
   //
-  // generateNFTs();
+  // generateDNAs();
   generateEditionsMetaFiles();
 })();

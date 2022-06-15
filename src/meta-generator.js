@@ -12,10 +12,10 @@ const buildDir = `${basePath}/build`;
 const buildDir_json = `${buildDir}/json`;
 const dnasFile = `${buildDir}/_DNAs.json`;
 
-const buildSetup = () => {
+function buildSetup() {
   if (fs.existsSync(buildDir_json)) return;
   fs.mkdirSync(buildDir_json);
-};
+}
 function saveSingleNftMetadata(_dnas, _index) {
   const _dna = _dnas[_index];
   const _edition = _index + 1;
@@ -26,13 +26,15 @@ function saveSingleNftMetadata(_dnas, _index) {
     description: projectDescription,
     image: `${baseUri}/${_edition}.${fileType}`,
     edition: _edition,
-    attributes: _dna.attributes,
+    attributes: _dna.attributes.map((e) => {
+      return { trait_type: e.trait_type, value: e.value };
+    }),
     author,
   };
   //
   fs.writeFileSync(
     `${buildDir_json}/${_edition}.json`,
-    JSON.stringify(_singleMetadata)
+    JSON.stringify(_singleMetadata, null, 2)
   );
 }
 

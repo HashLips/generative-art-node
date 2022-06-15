@@ -137,7 +137,7 @@ const createMetaData = () => {
   });
 };
 
-function generateNFTs() {
+function generateDNAs() {
   //
   buildSetup();
   setupPaths();
@@ -177,4 +177,4 @@ function generateNFTs() {
   createMetaData();
 }
 
-module.exports = { generateNFTs };
+module.exports = { generateDNAs };
