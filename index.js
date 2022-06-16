@@ -1,12 +1,15 @@
-const { buildSetup, generateFiles, createMetaData } = require("./src/main.js");
 const { generateDNAs } = require("./src/dna-generator.js");
 const { generateEditionsMetaFiles } = require("./src/meta-generator.js");
+const { generateImages } = require("./src/image-generator.js");
+const { replaceUris } = require("./src/replaceUris.js");
 
 (() => {
-  // buildSetup();
-  // generateFiles();
-  // createMetaData();
-  //
+  //Step One
   // generateDNAs();
-  generateEditionsMetaFiles();
+  //Step Two
+  // generateEditionsMetaFiles();
+  //Step Three
+  generateImages();
+  //Step FOur
+  //replaceUris();
 })();

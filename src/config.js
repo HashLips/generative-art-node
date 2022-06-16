@@ -2,7 +2,6 @@ const author = "Anon";
 const projectName = "MOMO";
 const projectDescription = "This is a description";
 const baseUri = "ipfs://baseUri";
-const mainQuantity = 25;
 const format = {
   width: 460,
   height: 460,
@@ -12,7 +11,7 @@ const fileType = "png";
 const races = [
   {
     name: "mama",
-    quantity: 5, //if mainQuantity is greater than 0 this "quantity" becomes a weight
+    quantity: 10, //if mainQuantity is greater than 0 this "quantity" becomes a weight
     layersOrder: [
       { name: "background" },
       { name: "body" },
@@ -23,7 +22,7 @@ const races = [
   },
   {
     name: "momo",
-    quantity: 5, //if mainQuantity is greater than 0 this "quantity" becomes a weight
+    quantity: 12, //if mainQuantity is greater than 0 this "quantity" becomes a weight
     layersOrder: [
       { name: "background" },
       { name: "body" },
@@ -44,7 +43,6 @@ module.exports = {
   projectName,
   projectDescription,
   baseUri,
-  mainQuantity,
   format,
   fileType,
   races,

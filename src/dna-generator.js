@@ -1,7 +1,7 @@
 const basePath = process.cwd();
 const sha1 = require(`sha1`);
 const fs = require("fs");
-const { mainQuantity, races, rarityWeight } = require("./config.js");
+const { races, rarityWeight } = require("./config.js");
 //
 const buildDir = `${basePath}/build`;
 const metDataFile = `${buildDir}/_DNAs.json`;
@@ -145,8 +145,10 @@ function generateDNAs() {
 
   let count = 0;
   let duplicateFoundCount = 0;
-  for (let _raceIndex = 0; _raceIndex < races.length; ++_raceIndex) {
-    for (let i = 0; i < mainQuantity; i++) {
+  const racesCount = races.length;
+  for (let _raceIndex = 0; _raceIndex < racesCount; ++_raceIndex) {
+    const raceQuantity = races[_raceIndex].quantity;
+    for (let i = 0; i < raceQuantity; i++) {
       const _dna = genDNA(_raceIndex);
 
       if (Exists.has(_dna.hash)) {
