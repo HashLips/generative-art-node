@@ -7,9 +7,9 @@ const { replaceUris } = require("./src/replaceUris.js");
   //Step One
   // generateDNAs();
   //Step Two
-  // generateEditionsMetaFiles();
+  // generateImages();
   //Step Three
-  generateImages();
+  // replaceUris();
   //Step FOur
-  //replaceUris();
+  // generateEditionsMetaFiles();
 })();
