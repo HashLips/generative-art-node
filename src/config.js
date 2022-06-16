@@ -1,7 +1,7 @@
 const author = "Anon";
 const projectName = "MOMO";
 const projectDescription = "This is a description";
-const baseUri = "ipfs://baseUri";
+const baseUri = "baseUri";
 const format = {
   width: 460,
   height: 460,

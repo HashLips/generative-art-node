@@ -1,13 +1,6 @@
 const basePath = process.cwd();
 const fs = require("fs");
-const {
-  baseUri,
-  fileType,
-  projectName,
-  projectDescription,
-  author,
-  format,
-} = require("./config.js");
+const { format } = require("./config.js");
 const { createCanvas, loadImage } = require("canvas");
 
 //

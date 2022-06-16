@@ -4,7 +4,7 @@ const fs = require("fs");
 const { races, rarityWeight } = require("./config.js");
 //
 const buildDir = `${basePath}/build`;
-const metDataFile = `${buildDir}/_DNAs.json`;
+const dnaFilePath = `${buildDir}/_DNAs.json`;
 const layersDir = `${basePath}/layers`;
 //
 const Exists = new Map();
@@ -127,10 +127,10 @@ const buildSetup = () => {
 };
 //#endregion
 
-const createMetaData = () => {
-  fs.stat(`${buildDir}/${metDataFile}`, (err) => {
+const createDnaFile = () => {
+  fs.stat(`${buildDir}/${dnaFilePath}`, (err) => {
     if (err == null || err.code === "ENOENT") {
-      fs.writeFileSync(`${metDataFile}`, JSON.stringify(schemas, null, 2));
+      fs.writeFileSync(`${dnaFilePath}`, JSON.stringify(schemas, null, 2));
     } else {
       console.log("Oh no, error: ", err.code);
     }
@@ -176,7 +176,7 @@ function generateDNAs() {
   console.log(
     `NFT count: ${count}, duplicate found count: ${duplicateFoundCount}`
   );
-  createMetaData();
+  createDnaFile();
 }
 
 module.exports = { generateDNAs };
